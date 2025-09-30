@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../services/auth';
 
 @Component({
   selector: 'app-login',
@@ -13,10 +14,10 @@ export class Login {
 
   loginForm!: FormGroup;
 
-   constructor(private fb: FormBuilder) {
+   constructor(private fb: FormBuilder, private auth: AuthService) {
     this.loginForm = this.fb.group({
-    email: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required, Validators.minLength(6)]],
+    email: ['test@correo.com', [Validators.required, Validators.email]],
+    password: ['123456', [Validators.required, Validators.minLength(6)]],
     remember: [false]
   });
    }
@@ -26,9 +27,17 @@ export class Login {
   onSubmit() {
     if (this.loginForm.valid) {
       console.log('Data:', this.loginForm.value);
+      this.auth.login(this.loginForm.value.email,this.loginForm.value.password).subscribe({
+        next:(res)=>{
+          console.log(res)
+        },
+        error:()=>{
+          this.loginForm.markAllAsTouched();
+        },
+      })
     } else {
-      console.log('Formulario inválido');
       this.loginForm.markAllAsTouched();
+      console.log('Formulario inválido');
     }
   }
 
