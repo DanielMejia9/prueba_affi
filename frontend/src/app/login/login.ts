@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../services/auth';
+import { routes } from '../app.routes';
+import { Route, Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -14,7 +16,11 @@ export class Login {
 
   loginForm!: FormGroup;
 
-   constructor(private fb: FormBuilder, private auth: AuthService) {
+   constructor(
+    private fb: FormBuilder, 
+    private auth: AuthService,
+    private route: Router) {
+    
     this.loginForm = this.fb.group({
     //OJO esto lo hago con fines prácticos para no estar escribiendo el
     //usuario y contraseña en cada momento en el formulario
@@ -33,6 +39,7 @@ export class Login {
       this.auth.login(this.loginForm.value.email,this.loginForm.value.password).subscribe({
         next:(res)=>{
           console.log(res)
+          this.route.navigate(['/dashboard'])
         },
         error:()=>{
           this.loginForm.markAllAsTouched();
