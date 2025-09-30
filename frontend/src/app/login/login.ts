@@ -16,6 +16,9 @@ export class Login {
 
    constructor(private fb: FormBuilder, private auth: AuthService) {
     this.loginForm = this.fb.group({
+    //OJO esto lo hago con fines prácticos para no estar escribiendo el
+    //usuario y contraseña en cada momento en el formulario
+    //Es una mala practico 
     email: ['test@correo.com', [Validators.required, Validators.email]],
     password: ['123456', [Validators.required, Validators.minLength(6)]],
     remember: [false]
