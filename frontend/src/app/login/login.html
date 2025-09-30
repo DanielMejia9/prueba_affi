@@ -2,16 +2,21 @@
   <div class="login-card">
     <h1 class="login-title">Iniciar Sesión</h1>
 
-    <form class="login-form">
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+
       <!-- Email -->
       <div class="form-group">
         <label for="email">Correo electrónico</label>
         <input
           id="email"
           type="email"
+          formControlName="email"
           placeholder="ejemplo@correo.com"
-          required
         />
+        <div class="error" *ngIf="email?.touched && email?.invalid">
+          <small *ngIf="email?.errors?.['required']">El correo es obligatorio</small>
+          <small *ngIf="email?.errors?.['email']">Formato de correo inválido</small>
+        </div>
       </div>
 
       <!-- Password -->
@@ -20,21 +25,29 @@
         <input
           id="password"
           type="password"
+          formControlName="password"
           placeholder="********"
-          required
         />
+        <div class="error" *ngIf="password?.touched && password?.invalid">
+          <small *ngIf="password?.errors?.['required']">La contraseña es obligatoria</small>
+          <small *ngIf="password?.errors?.['minlength']">
+            La contraseña debe tener al menos 6 caracteres
+          </small>
+        </div>
       </div>
 
       <!-- Remember -->
       <div class="form-options">
         <label>
-          <input type="checkbox" /> Recuérdame
+          <input type="checkbox" formControlName="remember" /> Recuérdame
         </label>
         <a href="#" class="forgot-link">¿Olvidaste tu contraseña?</a>
       </div>
 
       <!-- Botón -->
-      <button type="submit" class="btn-login">Ingresar</button>
+      <button type="submit" class="btn-login" [disabled]="loginForm.invalid">
+        Ingresar
+      </button>
     </form>
 
     <p class="register-text">

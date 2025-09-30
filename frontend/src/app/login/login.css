@@ -84,3 +84,9 @@
   margin-top: 1rem;
   font-size: 0.9rem;
 }
+
+.error {
+  color: #dc2626;
+  font-size: 0.8rem;
+  margin-top: 0.3rem;
+}
