@@ -12,8 +12,8 @@ describe('AuthService', () => {
         {
           provide: JwtService,
           useValue: {
-            sign: jest.fn().mockReturnValue('token'), // mock de método sign
-            verify: jest.fn().mockReturnValue(true),   // mock de método verify si lo usas
+            sign: jest.fn().mockReturnValue('mock-token'),
+            verify: jest.fn().mockReturnValue(true),
           },
         },
       ],
