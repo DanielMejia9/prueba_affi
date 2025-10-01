@@ -92,12 +92,10 @@ jobs:
       - name: Prepare front for deploy
         if: matrix.project == 'frontend'
         run: |
-          echo "Ruta raíz del proyecto frontend:"
-          pwd
-          echo "Ruta completa de dist/frontend:"
-          echo "$(pwd)/dist/frontend"
-          echo "Contenido de dist/frontend:"
-          ls -la dist/frontend
+          echo "Archivos en dist/frontend:"
+          ls -la /home/runner/work/prueba_affi/prueba_affi/frontend/dist/frontend
+          mkdir -p dist-front
+          cp -r /home/runner/work/prueba_affi/prueba_affi/frontend/dist/frontend/* dist-front/
 
       # Preparar backend para deploy
       - name: Prepare backend for deploy
@@ -123,4 +121,4 @@ jobs:
         uses: azure/webapps-deploy@v2
         with:
           app-name: frontend-affi-64376
-          package:  ./frontend/dist/frontend
+          package:  ./dist-front
