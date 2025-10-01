@@ -69,12 +69,16 @@ jobs:
       - name: Build project
         run: |
           if [ "${{ matrix.project }}" == "frontend" ]; then
-            # Angular 20 build
-            npx ng build --configuration production --output-path=dist/frontend
+            echo "Building frontend..."
+            npx ng build --configuration production
+            echo "Archivos generados en dist/frontend:"
+            ls -la dist/frontend
           else
-            # NestJS build
+            echo "Building backend..."
             npm run build
-            fi
+            ls -la dist
+          fi
+
 
       # 5️⃣ Login to Azure
       - name: Login to Azure
@@ -102,10 +106,12 @@ jobs:
       - name: Prepare frontend for deploy
         if: matrix.project == 'frontend'
         run: |
-          echo "Archivos en dist/frontend:"
-          ls -la dist/frontend
+          echo "Preparando archivos para deploy..."
           mkdir dist-front
           cp -r dist/frontend/* dist-front/
+          echo "Archivos listos en dist-front:"
+          ls -la dist-front
+
 
       # 8️⃣ Deploy Backend
       - name: Deploy Backend
@@ -122,3 +128,4 @@ jobs:
         with:
           app-name: frontend-affi-64376
           package: ./dist-front
+
