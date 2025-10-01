@@ -13,18 +13,17 @@ jobs:
     defaults:
       run:
         working-directory: infra
-
     steps:
-      # Checkout repo
+      # 1️⃣ Checkout repo
       - uses: actions/checkout@v3
 
-      # Setup Terraform
+      # 2️⃣ Setup Terraform
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: 1.9.5
 
-      # Terraform Init
+      # 3️⃣ Terraform Init
       - name: Terraform Init
         run: terraform init
         env:
@@ -33,7 +32,7 @@ jobs:
           ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
 
-      # Terraform Apply
+      # 4️⃣ Terraform Apply
       - name: Terraform Apply
         run: terraform apply -auto-approve
         env:
@@ -52,31 +51,31 @@ jobs:
     defaults:
       run:
         working-directory: ${{ matrix.project }}
-
     steps:
-      # Checkout repo
+      # 1️⃣ Checkout repo
       - uses: actions/checkout@v3
 
-      # Setup Node.js 20
+      # 2️⃣ Setup Node.js 20
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '20'
 
-      # Instalar dependencias
+      # 3️⃣ Install dependencies
       - name: Install dependencies
         run: npm install
 
-      # Build del proyecto
+      # 4️⃣ Build project
       - name: Build project
         run: |
           if [ "${{ matrix.project }}" == "frontend" ]; then
-            echo "Skip Angular build, creating test index.html"
+            # Angular 20 build
+            npx ng build --configuration production --output-path=dist
           else
+            # NestJS build
             npm run build
-          fi
 
-      # Login a Azure
+      # 5️⃣ Login to Azure
       - name: Login to Azure
         uses: azure/login@v1
         with:
@@ -88,7 +87,7 @@ jobs:
               "tenantId": "${{ secrets.AZURE_TENANT_ID }}"
             }
 
-      # Preparar backend para deploy
+      # 6️⃣ Prepare backend for deploy
       - name: Prepare backend for deploy
         if: matrix.project == 'backend'
         run: |
@@ -98,36 +97,29 @@ jobs:
           cd dist-deploy
           npm install --production
 
-      # Preparar frontend con un index.html básico
-      - name: Prepare front for deploy
+      # 7️⃣ Prepare frontend for deploy
+      - name: Prepare frontend for deploy
         if: matrix.project == 'frontend'
         run: |
           mkdir dist-front
-          cat > dist-front/index.html <<EOL
-          <!DOCTYPE html>
-          <html>
-          <head>
-            <title>Frontend Test</title>
-          </head>
-          <body>
-            <h1>Hola desde Azure Frontend 🚀</h1>
-            <p>Si ves esto, el deploy funciona correctamente.</p>
-          </body>
-          </html>
-          EOL
+          # Angular 20 genera la carpeta dist/<project-name>
+          PROJECT_NAME=$(ls dist)
+          cp -r dist/$PROJECT_NAME/* dist-front/
+          cd dist-front
+          npm install --production
 
-      # Deploy Backend
+      # 8️⃣ Deploy Backend
       - name: Deploy Backend
         if: matrix.project == 'backend'
         uses: azure/webapps-deploy@v2
         with:
           app-name: backend-affi-64376
-          package: dist-deploy
+          package: ./dist-deploy
 
-      # Deploy Frontend
+      # 9️⃣ Deploy Frontend
       - name: Deploy Frontend
         if: matrix.project == 'frontend'
         uses: azure/webapps-deploy@v2
         with:
           app-name: frontend-affi-64376
-          package: dist-front
+          package: ./dist-front
