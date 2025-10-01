@@ -122,4 +122,4 @@ jobs:
         uses: azure/webapps-deploy@v2
         with:
           app-name: frontend-affi-64376
-          package:  ./dist-front
+          package:  ./dist/frontend/*
