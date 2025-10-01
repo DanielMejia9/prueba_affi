@@ -74,6 +74,7 @@ jobs:
           else
             # NestJS build
             npm run build
+            fi
 
       # 5️⃣ Login to Azure
       - name: Login to Azure
