@@ -43,5 +43,5 @@ jobs:
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
-          app-name: ${{ matrix.project }}-affi
+          app-name: frontend-affi
           package: ${{ matrix.project == 'frontend' && 'dist/frontend' || './backend' }}
