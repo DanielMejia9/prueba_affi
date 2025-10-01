@@ -13,11 +13,12 @@ jobs:
     defaults:
       run:
         working-directory: infra
+
     steps:
-      # 1️⃣ Checkout repo
+      # Checkout repo
       - uses: actions/checkout@v3
 
-      # 2️⃣ Setup Terraform
+      # Setup Terraform
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
         with:
@@ -51,36 +52,31 @@ jobs:
     defaults:
       run:
         working-directory: ${{ matrix.project }}
+
     steps:
-      # 1️⃣ Checkout repo
+      # Checkout repo
       - uses: actions/checkout@v3
 
-      # 2️⃣ Setup Node.js 20
+      # Setup Node.js 20
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '20'
 
-      # 3️⃣ Install dependencies
+      # Instalar dependencias
       - name: Install dependencies
         run: npm install
 
-      # 4️⃣ Build project
+      #  Build del proyecto
       - name: Build project
         run: |
           if [ "${{ matrix.project }}" == "frontend" ]; then
-            echo "Building frontend..."
-            npx ng build --configuration production
-            echo "Archivos generados en dist/frontend:"
-            ls -la dist/frontend
+            npm run build -- --output-path=dist
           else
-            echo "Building backend..."
             npm run build
-            ls -la dist
           fi
 
-
-      # 5️⃣ Login to Azure
+      # Login a Azure
       - name: Login to Azure
         uses: azure/login@v1
         with:
@@ -92,7 +88,7 @@ jobs:
               "tenantId": "${{ secrets.AZURE_TENANT_ID }}"
             }
 
-      # 6️⃣ Prepare backend for deploy
+      # Preparar backend para deploy
       - name: Prepare backend for deploy
         if: matrix.project == 'backend'
         run: |
@@ -102,30 +98,28 @@ jobs:
           cd dist-deploy
           npm install --production
 
-      # 7️⃣ Prepare frontend for deploy
-      - name: Prepare frontend for deploy
+      # Preparar frontend para deploy
+      - name: Prepare front for deploy
         if: matrix.project == 'frontend'
         run: |
-          echo "Preparando archivos para deploy..."
           mkdir dist-front
           cp -r dist/frontend/* dist-front/
-          echo "Archivos listos en dist-front:"
-          ls -la dist-front
+          cp package*.json dist-front/
+          cd dist-front
+          npm install --production
 
-
-      # 8️⃣ Deploy Backend
+      # Deploy Backend
       - name: Deploy Backend
         if: matrix.project == 'backend'
         uses: azure/webapps-deploy@v2
         with:
           app-name: backend-affi-64376
-          package: ./dist-deploy
+          package: dist-deploy
 
-      # 9️⃣ Deploy Frontend
+           # Deploy Frontend
       - name: Deploy Frontend
         if: matrix.project == 'frontend'
         uses: azure/webapps-deploy@v2
         with:
           app-name: frontend-affi-64376
-          package: ./dist-front
-
+          package: dist-front
