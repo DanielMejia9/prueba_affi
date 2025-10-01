@@ -71,7 +71,7 @@ jobs:
       - name: Build project
         run: |
           if [ "${{ matrix.project }}" == "frontend" ]; then
-            npm build --configuration production
+            ng build --configuration production
           else
             npm run build
           fi
