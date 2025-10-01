@@ -57,11 +57,19 @@ jobs:
         with:
           app-name: frontend-affi
           package: ./dist/frontend
+          
+      # 7️⃣ Preparar backend para deploy
+      - name: Prepare backend for deploy
+        if: matrix.project == 'backend'
+        run: |
+          mkdir dist-deploy
+          cp -r dist/* dist-deploy/
+          cp package*.json dist-deploy/
 
-      # 7️⃣ Deploy Backend
+      # 8️⃣ Deploy Backend
       - name: Deploy Backend
         if: matrix.project == 'backend'
         uses: azure/webapps-deploy@v2
         with:
           app-name: backend-affi
-          package: ./backend/dist
+          package: ./dist-deploy
