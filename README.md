@@ -19,6 +19,9 @@ Antes de empezar asegúrate de tener instalado:
 
 ## 🔧 Instalación general
 
+Usuario: test@correo.com 
+Clave:123456
+
 Clona el repositorio:
 
 ```bash
