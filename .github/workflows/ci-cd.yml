@@ -103,7 +103,7 @@ jobs:
         if: matrix.project == 'frontend'
         run: |
           mkdir dist-front
-          cp -r dist/frontend/* dist-front/
+          cp -r dist/* dist-front/
           cp package*.json dist-front/
           cd dist-front
           npm install --production
