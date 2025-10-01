@@ -1,54 +1,58 @@
+# main.tf
+
 provider "azurerm" {
   features {}
+  subscription_id = "daac5032-7f93-4607-8a40-01e9734e4e4a"
 }
 
+
+# 1️⃣ Resource Group
 resource "azurerm_resource_group" "rg" {
   name     = "monorepo-rg"
-  location = "East US"
+  location = "Canada Central"  # cambia si quieres otra región
 }
 
-# Frontend App Service Plan
-resource "azurerm_app_service_plan" "frontend_plan" {
-  name                = "frontend-plan"
+# 2️⃣ Service Plan
+resource "azurerm_service_plan" "plan" {
+  name                = "example-plan"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
-  sku {
-    tier = "Free"
-    size = "F1"
+
+  os_type  = "Linux"
+  sku_name = "B1"
+}
+
+
+# 3️⃣ Frontend Web App
+resource "azurerm_linux_web_app" "frontend" {
+  name                = "frontend-affi-${random_integer.suffix.result}"
+  resource_group_name = azurerm_resource_group.rg.name
+  location            = azurerm_resource_group.rg.location
+  service_plan_id     = azurerm_service_plan.plan.id
+
+  site_config {
+    application_stack {
+      node_version = "20-lts"
+    }
   }
 }
 
-# Backend App Service Plan
-resource "azurerm_app_service_plan" "backend_plan" {
-  name                = "backend-plan"
-  location            = azurerm_resource_group.rg.location
+
+# 4️⃣ Backend Web App
+resource "azurerm_linux_web_app" "backend" {
+  name                = "backend-affi-${random_integer.suffix.result}"
   resource_group_name = azurerm_resource_group.rg.name
-  sku {
-    tier = "Free"
-    size = "F1"
+  location            = azurerm_resource_group.rg.location
+  service_plan_id     = azurerm_service_plan.plan.id
+
+  site_config {
+    application_stack {
+      node_version = "20-lts"
+    }
   }
 }
 
-# Frontend App Service
-resource "azurerm_app_service" "frontend_app" {
-  name                = "frontend-app-monorepo"
-  location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
-  app_service_plan_id = azurerm_app_service_plan.frontend_plan.id
-}
-
-# Backend App Service
-resource "azurerm_app_service" "backend_app" {
-  name                = "backend-app-monorepo"
-  location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
-  app_service_plan_id = azurerm_app_service_plan.backend_plan.id
-}
-
-output "frontend_url" {
-  value = azurerm_app_service.frontend_app.default_site_hostname
-}
-
-output "backend_url" {
-  value = azurerm_app_service.backend_app.default_site_hostname
+resource "random_integer" "suffix" {
+  min = 10000
+  max = 99999
 }
