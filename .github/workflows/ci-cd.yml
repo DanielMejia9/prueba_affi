@@ -94,7 +94,7 @@ jobs:
         uses: azure/webapps-deploy@v2
         with:
           app-name: frontend-affi-64376
-          package: ./frontend/dist
+          package: ./frontend/dist/**
 
       # Preparar backend para deploy
       - name: Prepare backend for deploy
@@ -112,4 +112,4 @@ jobs:
         uses: azure/webapps-deploy@v2
         with:
           app-name: backend-affi-64376
-          package: ./backend/dist-deploy
+          package: ./backend/dist-deploy/**
