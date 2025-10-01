@@ -56,8 +56,8 @@ jobs:
         uses: azure/webapps-deploy@v2
         with:
           app-name: frontend-affi
-          package: ./dist/frontend
-          
+          package: frontend/dist/frontend
+
       # 7️⃣ Preparar backend para deploy
       - name: Prepare backend for deploy
         if: matrix.project == 'backend'
