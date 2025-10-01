@@ -43,5 +43,5 @@ jobs:
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
-          app-name: ${{ matrix.project }}-app   # Por ejemplo: frontend-app / backend-app
+          app-name: frontend-affi   # Por ejemplo: frontend-app / backend-app
           package: .
