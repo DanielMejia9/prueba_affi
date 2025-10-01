@@ -92,18 +92,12 @@ jobs:
       - name: Prepare front for deploy
         if: matrix.project == 'frontend'
         run: |
-          echo "Estructura de la carpeta frontend:"
-          ls -R frontend
-
-          echo "Archivos en dist/frontend:"
-          if [ -d "dist/frontend" ]; then
-            ls -la dist/frontend
-            mkdir -p dist-front
-            cp -r dist/frontend/* dist-front/
-          else
-            echo "La carpeta dist/frontend NO existe. Verifica el build de Angular."
-            exit 1
-          fi
+          echo "Ruta raíz del proyecto frontend:"
+          pwd
+          echo "Ruta completa de dist/frontend:"
+          echo "$(pwd)/dist/frontend"
+          echo "Contenido de dist/frontend:"
+          ls -la dist/frontend
 
       # Preparar backend para deploy
       - name: Prepare backend for deploy
