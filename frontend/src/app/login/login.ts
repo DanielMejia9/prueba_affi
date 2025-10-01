@@ -22,9 +22,6 @@ export class Login {
     private route: Router) {
     
     this.loginForm = this.fb.group({
-    //OJO esto lo hago con fines prácticos para no estar escribiendo el
-    //usuario y contraseña en cada momento en el formulario
-
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(6)]],
     remember: [false]
@@ -35,10 +32,8 @@ export class Login {
 
   onSubmit() {
     if (this.loginForm.valid) {
-      console.log('Data:', this.loginForm.value);
       this.auth.login(this.loginForm.value.email,this.loginForm.value.password).subscribe({
         next:(res)=>{
-          console.log(res)
           this.route.navigate(['/dashboard'])
         },
         error:()=>{
@@ -47,7 +42,6 @@ export class Login {
       })
     } else {
       this.loginForm.markAllAsTouched();
-      console.log('Formulario inválido');
     }
   }
 
