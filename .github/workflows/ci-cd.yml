@@ -94,7 +94,7 @@ jobs:
         uses: azure/webapps-deploy@v2
         with:
           app-name: frontend-affi-64376
-          package: ./dist/frontend
+          package: ./frontend/dist/frontend
 
       # Preparar backend para deploy
       - name: Prepare backend for deploy
