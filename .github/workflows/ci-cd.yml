@@ -70,7 +70,7 @@ jobs:
         run: |
           if [ "${{ matrix.project }}" == "frontend" ]; then
             # Angular 20 build
-            npx ng build --configuration production --output-path=dist
+            npx ng build --configuration production --output-path=dist/frontend
           else
             # NestJS build
             npm run build
@@ -103,8 +103,6 @@ jobs:
         if: matrix.project == 'frontend'
         run: |
           mkdir dist-front
-          # Angular 20 genera la carpeta dist/<project-name>
-          PROJECT_NAME=$(ls dist)
           cp -r dist/frontend/* dist-front/
           cd dist-front
           npm install --production
