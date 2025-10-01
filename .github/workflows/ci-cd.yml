@@ -88,16 +88,6 @@ jobs:
               "tenantId": "${{ secrets.AZURE_TENANT_ID }}"
             }
 
-      # Preparar backend para deploy
-      - name: Prepare backend for deploy
-        if: matrix.project == 'backend'
-        run: |
-          mkdir dist-deploy
-          cp -r dist/* dist-deploy/
-          cp package*.json dist-deploy/
-          cd dist-deploy
-          npm install --production
-
       # Preparar frontend para deploy
       - name: Prepare front for deploy
         if: matrix.project == 'frontend'
@@ -106,6 +96,16 @@ jobs:
           cp -r dist/frontend/* dist-front/
           cp package*.json dist-front/
           cd dist-front
+          npm install --production
+
+      # Preparar backend para deploy
+      - name: Prepare backend for deploy
+        if: matrix.project == 'backend'
+        run: |
+          mkdir dist-deploy
+          cp -r dist/* dist-deploy/
+          cp package*.json dist-deploy/
+          cd dist-deploy
           npm install --production
 
       # Deploy Backend
@@ -122,4 +122,4 @@ jobs:
         uses: azure/webapps-deploy@v2
         with:
           app-name: frontend-affi-64376
-          package:  ./dist
+          package:  dist-front
