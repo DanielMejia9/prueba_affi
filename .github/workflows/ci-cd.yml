@@ -105,7 +105,7 @@ jobs:
           mkdir dist-front
           # Angular 20 genera la carpeta dist/<project-name>
           PROJECT_NAME=$(ls dist)
-          cp -r dist/$PROJECT_NAME/* dist-front/
+          cp -r dist/frontend/* dist-front/
           cd dist-front
           npm install --production
 
