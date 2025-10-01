@@ -33,7 +33,7 @@ jobs:
       - name: Build project
         run: |
           if [ "${{ matrix.project }}" == "frontend" ]; then
-            npm run build -- --output-path=dist/frontend
+            npm run build -- --output-path=dist
           else
             npm run build
           fi
@@ -55,8 +55,8 @@ jobs:
         if: matrix.project == 'frontend'
         uses: azure/webapps-deploy@v2
         with:
-          app-name: frontend-affi
-          package: frontend/dist/frontend
+          app-name: frontend-affi-64376
+          package: ./frontend/dist
 
       # 7️⃣ Preparar backend para deploy
       - name: Prepare backend for deploy
@@ -73,5 +73,5 @@ jobs:
         if: matrix.project == 'backend'
         uses: azure/webapps-deploy@v2
         with:
-          app-name: backend-affi
+          app-name: backend-affi-64376
           package: ./backend/dist-deploy
