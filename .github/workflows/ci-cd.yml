@@ -102,10 +102,10 @@ jobs:
       - name: Prepare frontend for deploy
         if: matrix.project == 'frontend'
         run: |
+          echo "Archivos en dist/frontend:"
+          ls -la dist/frontend
           mkdir dist-front
           cp -r dist/frontend/* dist-front/
-          cd dist-front
-          npm install --production
 
       # 8️⃣ Deploy Backend
       - name: Deploy Backend
@@ -121,4 +121,4 @@ jobs:
         uses: azure/webapps-deploy@v2
         with:
           app-name: frontend-affi-64376
-          package: ./dist-front
+          package: dist-front
