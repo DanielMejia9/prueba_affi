@@ -91,19 +91,11 @@ jobs:
       # Preparar frontend para deploy
       - name: Prepare front for deploy
         if: matrix.project == 'frontend'
-        run: |
-          echo "Estructura de la carpeta frontend:"
-          ls -R frontend
-
+        run:  |
           echo "Archivos en dist/frontend:"
-          if [ -d "dist/frontend" ]; then
-            ls -la dist/frontend
-            mkdir -p dist-front
-            cp -r dist/frontend/* dist-front/
-          else
-            echo "La carpeta dist/frontend NO existe. Verifica el build de Angular."
-            exit 1
-          fi
+          ls -la /home/runner/work/prueba_affi/prueba_affi/frontend/dist/frontend
+          mkdir -p dist-front
+          cp -r /home/runner/work/prueba_affi/prueba_affi/frontend/dist/frontend/* dist-front/
 
       # Preparar backend para deploy
       - name: Prepare backend for deploy
@@ -129,4 +121,4 @@ jobs:
         uses: azure/webapps-deploy@v2
         with:
           app-name: frontend-affi-64376
-          package:  ./frontend/dist/frontend
+          package:  dist-front
