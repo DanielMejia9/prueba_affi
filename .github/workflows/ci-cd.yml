@@ -65,6 +65,8 @@ jobs:
           mkdir dist-deploy
           cp -r dist/* dist-deploy/
           cp package*.json dist-deploy/
+          cd dist-deploy
+          npm install --production
 
       # 8️⃣ Deploy Backend
       - name: Deploy Backend
