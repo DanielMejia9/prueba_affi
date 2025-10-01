@@ -24,7 +24,7 @@ jobs:
         with:
           terraform_version: 1.9.5
 
-      # 3️⃣ Terraform Init
+      # Terraform Init
       - name: Terraform Init
         run: terraform init
         env:
@@ -33,7 +33,7 @@ jobs:
           ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
 
-      # 4️⃣ Terraform Apply
+      # Terraform Apply
       - name: Terraform Apply
         run: terraform apply -auto-approve
         env:
@@ -67,11 +67,11 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      #  Build del proyecto
+      # Build del proyecto
       - name: Build project
         run: |
           if [ "${{ matrix.project }}" == "frontend" ]; then
-            npm run build -- --output-path=dist
+            echo "Skip Angular build, creating test index.html"
           else
             npm run build
           fi
@@ -98,15 +98,23 @@ jobs:
           cd dist-deploy
           npm install --production
 
-      # Preparar frontend para deploy
+      # Preparar frontend con un index.html básico
       - name: Prepare front for deploy
         if: matrix.project == 'frontend'
         run: |
           mkdir dist-front
-          cp -r dist/* dist-front/
-          cp package*.json dist-front/
-          cd dist-front
-          npm install --production
+          cat > dist-front/index.html <<EOL
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <title>Frontend Test</title>
+          </head>
+          <body>
+            <h1>Hola desde Azure Frontend 🚀</h1>
+            <p>Si ves esto, el deploy funciona correctamente.</p>
+          </body>
+          </html>
+          EOL
 
       # Deploy Backend
       - name: Deploy Backend
@@ -116,7 +124,7 @@ jobs:
           app-name: backend-affi-64376
           package: dist-deploy
 
-           # Deploy Frontend
+      # Deploy Frontend
       - name: Deploy Frontend
         if: matrix.project == 'frontend'
         uses: azure/webapps-deploy@v2
